@@ -4,7 +4,8 @@
       "Bash(php artisan:*)",
       "Bash(gh pr:*)",
       "Bash(git fetch:*)",
-      "Bash(git pull:*)"
+      "Bash(git pull:*)",
+      "Bash(xargs -I {} ls -la {})"
     ]
   }
 }
