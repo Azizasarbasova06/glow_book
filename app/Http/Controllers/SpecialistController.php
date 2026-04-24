@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Specialist; // Added Specialist model
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class SpecialistController extends Controller
@@ -34,9 +35,6 @@ class SpecialistController extends Controller
         return view('specialist.dashboard', compact('todayAppointments', 'allAppointments'));
     }
 
-    /**
-     * Update appointment status.
-     */
     public function updateStatus(Request $request, Appointment $appointment)
     {
         $specialist = auth()->user()->specialist;
@@ -52,31 +50,5 @@ class SpecialistController extends Controller
 
         $msg = $request->status === 'completed' ? 'Appointment marked as completed!' : 'Appointment has been cancelled.';
         return back()->with('success', $msg);
-    }
-
-    /**
-     * Show all specialists and Top Master banner.
-     */
-    public function index()
-    {
-        $specialists = Specialist::with(['user', 'salon', 'services', 'reviews'])->get();
-
-        $topMaster = Specialist::with(['user', 'salon'])
-            ->withAvg('reviews', 'rating')
-            ->withCount('reviews')
-            ->orderByDesc('reviews_avg_rating')
-            ->first();
-
-        return view('specialists.index', compact('specialists', 'topMaster'));
-    }
-
-    /**
-     * Show individual specialist profile.
-     */
-    public function show($id)
-    {
-        $specialist = Specialist::with(['user', 'salon', 'services', 'reviews'])->findOrFail($id);
-
-        return view('specialists.show', compact('specialist'));
     }
 }
